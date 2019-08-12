@@ -19,15 +19,22 @@ initialize = do
   setSGR [ SetColor Foreground Vivid Red ]
   putStrLn "Paralensic" 
   hSetBuffering stdin NoBuffering
- 
+
+--TODO 
+--loop :: State Model -> IO ()
+--add stateful computation to loop
+
 loop :: IO ()
 loop = do 
   terminalSize <- getTerminalSize 
   let t = unwrap terminalSize
   let width = 5
-  let x = [1.. (pred $ div (pred $ snd t) width)]
-  let y = [1.. ((fst t) - 3)]  
-  let g = generateGraph x y (\a -> \b -> (fromIntegral a) / (fromIntegral b))
+  let xSize = div (pred $ snd t) (2 * width)
+  let ySize = div (fst t) 2
+  let xAxis = listFromRange (succ $ negate xSize) (pred xSize) 1
+  let yAxis = listFromRange (succ $ negate ySize) (pred ySize) 1 
+  let f = \x -> \y -> natToInt $ szudzikPair (intToNat x, intToNat y) 
+  let g = generateGraph xAxis yAxis f
   printGraph g width
 
 unwrap :: Maybe (Int, Int) -> (Int, Int)

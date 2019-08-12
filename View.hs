@@ -3,6 +3,14 @@ module View where
 import Model
 import System.Console.ANSI
 
+printBlockGraph :: (Integral a, Integral b, Integral c)
+  => Graph a b c -> IO () 
+printBlockGraph g = do 
+  let vs = [[greyTransform v | v <- row] | row <- values g]
+  let p = \row -> putStrLn $ concatMap show row
+  mapM_ p $ reverse [row | row <- vs]
+
+
 printGraph :: (Show a, Show b, Show c) 
   => Graph a b c -> Int -> IO ()
 printGraph graph width = do
